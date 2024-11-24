@@ -9,9 +9,9 @@ import java.net.Socket;
 
 public class Servidor_A {
 
-    private static final int PORTA_A = 8080; // Porta do Servidor A
-    private static final String HOST_B = "localhost"; // Endereço do Servidor B
-    private static final int PORTA_B = 8081; // Porta do Servidor B
+    private static final int PORTA_A = 8080; 
+    private static final String HOST_B = "localhost"; 
+    private static final int PORTA_B = 8081; 
 
     public void iniciarServidor() {
         try (ServerSocket serverSocket = new ServerSocket(PORTA_A)) {
@@ -24,14 +24,14 @@ public class Servidor_A {
                     BufferedReader entradaCliente = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                     PrintWriter respostaCliente = new PrintWriter(clientSocket.getOutputStream(), true);
 
-                    // Recebe a consulta do cliente
+                    
                     String consulta = entradaCliente.readLine();
                     System.out.println("Consulta recebida do cliente: " + consulta);
 
-                    // Encaminha a consulta para o Servidor B
+                    
                     String respostaServidorB = consultarServidorB(consulta);
 
-                    // Retorna a resposta do Servidor B para o cliente
+                    
                     respostaCliente.println(respostaServidorB);
 
                 } catch (IOException e) {
@@ -51,10 +51,10 @@ public class Servidor_A {
              PrintWriter saidaB = new PrintWriter(socketB.getOutputStream(), true);
              BufferedReader entradaB = new BufferedReader(new InputStreamReader(socketB.getInputStream()))) {
 
-            // Envia a consulta para o Servidor B
+            
             saidaB.println(consulta);
 
-            // Aguarda e retorna a resposta do Servidor B
+            
             return entradaB.readLine();
 
         } catch (IOException e) {
