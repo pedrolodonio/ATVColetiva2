@@ -59,3 +59,4 @@ public class Servidor_B {
 
         return resultados.length() > 0 ? resultados.toString() : "Nenhum resultado encontrado no Servidor B";
     }
+}
