@@ -22,10 +22,10 @@ public class CarregaDados {
         }
 
         // Log para verificar o tamanho dos arquivos carregados
-        int numElementosA = contarElementos(rootNodeA);
-        int numElementosB = contarElementos(rootNodeB);
-        System.out.println("Arquivo A carregado com " + numElementosA + " elementos.");
-        System.out.println("Arquivo B carregado com " + numElementosB + " elementos.");
+        // int numElementosA = contarElementos(rootNodeA);
+        // int numElementosB = contarElementos(rootNodeB);
+        // System.out.println("Arquivo A carregado com " + numElementosA + " elementos."); utilizado apenas para teste
+        // System.out.println("Arquivo B carregado com " + numElementosB + " elementos."); utilizado apenas para teste
 
         // Retorna ambos os arquivos como um array de JsonNode
         return new JsonNode[] { rootNodeA, rootNodeB };
@@ -48,9 +48,9 @@ public class CarregaDados {
     }
 
     // Método para contar o número de elementos em um JsonNode utilizado em debug
-    private static int contarElementos(JsonNode rootNode) {
-        // Verifica se a chave 'title' existe no JSON
-        JsonNode titleNode = rootNode.path("title");
-        return titleNode.size();  // Conta o número de elementos na chave 'title'
-    }
+    // private static int contarElementos(JsonNode rootNode) {
+    //     // Verifica se a chave 'title' existe no JSON
+    //     JsonNode titleNode = rootNode.path("title");
+    //     return titleNode.size();  // Conta o número de elementos na chave 'title'
+    // }
 }

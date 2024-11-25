@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.function.Consumer;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -68,26 +69,41 @@ public class Servidor_A {
         }
     }
 
-   // Método para realizar a busca nos dados de A
+// Método para realizar a busca nos dados de A
 private String realizarBusca(String consulta) {
     Busca busca = new Busca();  // Instancia a classe de busca KMP
     StringBuilder resultado = new StringBuilder();
 
-    // Itera sobre as chaves do objeto "title"
-    dados.path("title").fieldNames().forEachRemaining(nomeChave -> {
-        String tituloOriginal = dados.path("title").path(nomeChave).asText(); // Mantém o título original
-        String tituloNormalizado = tituloOriginal.toLowerCase().trim(); // Normaliza o título para a busca
+    // Verifica se a consulta é válida
+    if (consulta == null || consulta.trim().isEmpty()) {
+        return "Consulta inválida ou vazia.";
+    }
 
-        // Verifica se a consulta está presente no título
-        if (busca.kmpBusca(tituloNormalizado, consulta.toLowerCase().trim())) {
-            // Registra a localização do título encontrado
-            resultado.append(nomeChave).append(": ").append(tituloOriginal).append("\n");  // Sem o "Título encontrado no índice"
+    // Função auxiliar para realizar a busca em uma chave específica
+    Consumer<String> buscarEmChave = (String chave) -> {
+        JsonNode node = dados.path(chave); // Obtém o nó correspondente
+        if (!node.isMissingNode() && node.fieldNames().hasNext()) {
+            node.fieldNames().forEachRemaining(nomeChave -> {
+                String textoOriginal = node.path(nomeChave).asText(); // Mantém o texto original
+                String textoNormalizado = textoOriginal.toLowerCase().trim(); // Normaliza o texto para a busca
+
+                // Verifica se a consulta está presente no texto
+                if (busca.kmpBusca(textoNormalizado, consulta.toLowerCase().trim())) {
+                    // Registra a localização do texto encontrado
+                    resultado.append(chave).append(" - ").append(nomeChave).append(": ").append(textoOriginal).append("\n");
+                }
+            });
         }
-    });
+    };
 
-    // Se não encontrou nada, retorna uma string vazia em vez de "Nenhum resultado encontrado"
+    // Realiza a busca em "title" e "abstract"
+    buscarEmChave.accept("title");
+    buscarEmChave.accept("abstract");
+
+    // Retorna os resultados encontrados ou uma string vazia
     return resultado.length() == 0 ? "" : resultado.toString();
 }
+
 
 
     // Método para consultar o Servidor B
@@ -128,6 +144,7 @@ private String combinarResultados(String respostaA, String respostaB) {
     } 
 
     return resultadoFinal.toString();
+
 }
 
 }
