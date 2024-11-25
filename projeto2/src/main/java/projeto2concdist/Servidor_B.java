@@ -59,26 +59,37 @@ public class Servidor_B {
     }
 
     private String buscaLocal(String consulta) {
+        // Verifica se a consulta é válida
+        if (consulta == null || consulta.trim().isEmpty()) {
+            return "Consulta inválida ou vazia.";
+        }
+    
         StringBuilder resultados = new StringBuilder();
         JsonNode titulos = dados.path("title");
     
-        // Normaliza a consulta (remove espaços extras)
+        // Verifica se há dados disponíveis para busca
+        if (titulos.isMissingNode() || !titulos.fieldNames().hasNext()) {
+            return "Nenhum título disponível para busca.";
+        }
+    
+        // Instancia a classe Busca para utilizar o algoritmo KMP
+        Busca busca = new Busca();
         String consultaNormalizada = consulta.toLowerCase().trim();
     
-        // Itera sobre as chaves numéricas do objeto
+        // Itera sobre as chaves do objeto "title"
         titulos.fieldNames().forEachRemaining(nomeChave -> {
-            // A chave é o índice numérico como string, e o valor é o título
-            String tituloOriginal = titulos.path(nomeChave).asText(); // Mantém o título original
+            String tituloOriginal = titulos.path(nomeChave).asText(); // Obtém o título original
             String tituloNormalizado = tituloOriginal.toLowerCase().trim(); // Normaliza o título
     
-            // Verifica se o título contém o padrão de busca
-            if (tituloNormalizado.contains(consultaNormalizada)) {
-                // Adiciona o índice e o título original
-                resultados.append(nomeChave + ": " + tituloOriginal).append("\n");
+            // Usa o KMP para verificar se a consulta está presente no título
+            if (busca.kmpBusca(tituloNormalizado, consultaNormalizada)) {
+                // Adiciona o índice e o título original ao resultado
+                resultados.append(nomeChave).append(": ").append(tituloOriginal).append("\n");
             }
         });
     
         // Retorna os resultados encontrados ou uma mensagem padrão se nada for encontrado
-        return resultados.length() > 0 ? resultados.toString() : "";
+        return resultados.length() > 0 ? resultados.toString().trim() : "";
     }
+    
 }
