@@ -25,7 +25,7 @@ Após a substituição é importante executar o comando:
 mvn compile
 ~~~
 
-Para executar é possível executar tanto diretamente quanto pelo código:
+Para executar é possível executar tanto diretamente,quanto pelo código:
 
 ~~~
 mvn exec:java
